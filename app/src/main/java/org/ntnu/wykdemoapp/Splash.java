@@ -6,11 +6,13 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 public class Splash extends AppCompatActivity {
 
+    private String TAG = "DemoSplash";
     private WYKAuthenticationReceiver wykAuthenticationReceiver;
 
     @Override
@@ -34,15 +36,24 @@ public class Splash extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //DO NOTHING
+                try {
+                    Splash.this.wait(5000);
+                } catch (Exception e) {
+                    Log.w(TAG, e.getMessage());
+                }
+
+                Intent serviceIntent = new Intent();
+                serviceIntent.setAction("org.ntnu.wyk_service.AUTHENTICATE");
+                serviceIntent.setComponent(new ComponentName("org.ntnu.wyk_service", "org.ntnu.wyk_service.WYKService"));
+                ComponentName c = getApplicationContext().startService(serviceIntent);
             }
-        }, 5000);
+        }, 2000);
 
         //DO THE AUTHENTICATION
-        Intent serviceIntent = new Intent();
+        /*Intent serviceIntent = new Intent();
         serviceIntent.setAction("org.ntnu.wyk_service.AUTHENTICATE");
         serviceIntent.setComponent(new ComponentName("org.ntnu.wyk_service", "org.ntnu.wyk_service.WYKService"));
-        ComponentName c = getApplicationContext().startService(serviceIntent);
+        ComponentName c = getApplicationContext().startService(serviceIntent);*/
     }
 
     @Override
